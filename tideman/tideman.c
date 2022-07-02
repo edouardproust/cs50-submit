@@ -12,14 +12,11 @@ int preferences[MAX][MAX];
 // locked[i][j] means i is locked in over j
 bool locked[MAX][MAX];
 
-int results[MAX];
-
 // Each pair has a winner, loser
 typedef struct
 {
     int winner;
     int loser;
-    int strength;
 }
 pair;
 
@@ -38,6 +35,7 @@ void add_pairs(void);
 void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
+bool circle_occures(int cycle_start, int loser);
 void debug_ranks(int ranks[]);
 void debug_preferences(void);
 void debug_pairs(string prefix);
@@ -125,7 +123,7 @@ void clear_locked(void)
 bool vote(int rank, string name, int ranks[])
 {
     // Check if the name exist (valid ballot). If not, return false
-    for (int i = 0;i < candidate_count; i++)
+    for (int i = 0; i < candidate_count; i++)
     {
         // Check if the candidate's name exists in `candidates[]`
         if (strcmp(name, candidates[i]) == 0)
@@ -168,7 +166,7 @@ void record_preferences(int ranks[])
             }
         }
     }
-    // Debug
+
     if (DEBUG)
     {
         debug_preferences();
@@ -192,15 +190,14 @@ void add_pairs(void)
             // Check that is not Tie (score is bigger than the one of its opposite pair)
             if (preferences[i][j] > preferences[j][i])
             {
-                // Create a pair && set winner, loser and strength of victory
+                // Create a pair && set winner and loser
                 pairs[pair_count].winner = i;
                 pairs[pair_count].loser = j;
-                pairs[pair_count].strength = preferences[i][j] - preferences[j][i];
                 pair_count++;
             }
         }
     }
-    // Debug
+
     if (DEBUG)
     {
         debug_pairs("(unsorted) ");
@@ -211,28 +208,39 @@ void add_pairs(void)
 
 /**
  * Sort pairs in decreasing order by strength of victory
- * Used algorythm: selection sort
  */
 void sort_pairs(void)
 {
-    int sorted_pairs[pair_count];
-    // For each pair
-    for (int i = 0; i < pair_count; i++)
+    // For each pair (`c` stands for current). Start at 1 as we then compare with the previous pair: p = c - 1 (`p` stands for previous)
+    for (int c = 1; c < pair_count; c++)
     {
-        // Define highest strength
-        for (int j = i+1; j < pair_count; j++)
+        // Save current pair before further updates of its value
+        pair saved_cur_pair = pairs[c];
+
+        // For each previous pair (decreasing loop)
+        // Compare the amount of people who prefer winner to loser in the current pair with the previous pair's one
+        int p;
+        for (p = c - 1; p >= 0; p--)
         {
-            // if strength is higher than the ones of the other pairs
-            if (pairs[j].strength > pairs[i].strength)
+            // vars
+            int l_prev = pairs[p].loser;
+            int l_cur = pairs[c].loser;
+            int w_prev = pairs[p].winner;
+            int w_cur = pairs[c].winner;
+
+            // If more people prefer winner to loser in the current pair than in the previous one: replace current pair by the previous one.
+            if (preferences[w_cur][l_cur] > preferences[w_prev][l_prev])
             {
-                pair toMoveDown = pairs[j];
-                pair toMoveUp = pairs[i];
-                pairs[i] = toMoveDown;
-                pairs[j] = toMoveUp;
+                pairs[c] = pairs[p];
+            }
+            else
+            {
+                break; // Stop comparision
             }
         }
+        pairs[p + 1] = saved_cur_pair;
     }
-    // Debug
+
     if (DEBUG)
     {
         debug_pairs("(sorted) ");
@@ -246,12 +254,16 @@ void sort_pairs(void)
  */
 void lock_pairs(void)
 {
+    // For each pair
     for (int i = 0; i < pair_count; i++)
     {
-        locked[pairs[i].winner][pairs[i].loser] = true;
-        results[i] += 1;
+        // Lock the pair only if no circle occures
+        if (!circle_occures(pairs[i].winner, pairs[i].loser))
+        {
+            locked[pairs[i].winner][pairs[i].loser] = true;
+        }
     }
-    // Debug
+
     if (DEBUG)
     {
         debug_locked();
@@ -264,17 +276,49 @@ void lock_pairs(void)
  */
 void print_winner(void)
 {
-    // Print the winner of the locked pair that has the most `true` values
-    printf("Results: ");
-    for (int i = 0; i < pair_count; i++)
+    for (int i = 0; i < candidate_count; i++)
     {
-        printf("%i %i / ", i, results[i]);
+        bool opposite_pairs = false;
+
+        // Print the first candidate whose all opposite pairs are false
+        for (int j = 0; j < candidate_count; j++)
+        {
+            if (locked[j][i] == true) // locked[j][i] is the opposite pair (of locked[i][j])
+            {
+                opposite_pairs = true;
+                break;
+            }
+        }
+        if (opposite_pairs == false)
+        {
+            printf("%s\n", candidates[i]);
+            return;
+        }
     }
-    printf("\n");
-
-    // If TIE: print the first one
-
     return;
+}
+
+/**
+ * Check if the given pairs make a circle
+ */
+bool circle_occures(int first, int loser)
+{
+    // Check the first entry
+    if (loser == first)
+    {
+        return true;
+    }
+    for (int i = 0; i < candidate_count; i++)
+    {
+        if (locked[loser][i])
+        {
+            if (circle_occures(first, i))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 // DEBUG FUNCTIONS ========================================================
@@ -310,7 +354,7 @@ void debug_preferences(void)
         }
         printf(" }\n");
     }
-    printf("}");
+    printf("}\n");
     return;
 }
 
@@ -322,7 +366,7 @@ void debug_pairs(string prefix)
     printf("%spairs: { \n", prefix);
     for (int i = 0; i < pair_count; i++)
     {
-        printf("   %i: { 'winner': %i, 'loser': %i, 'strength': %i }\n", i, pairs[i].winner, pairs[i].loser, pairs[i].strength);
+        printf("   %i: { 'winner': %i, 'loser': %i }\n", i, pairs[i].winner, pairs[i].loser);
     }
     printf("}\n");
     return;
@@ -345,6 +389,6 @@ void debug_locked(void)
         }
         printf(" }\n");
     }
-    printf("}\n");
+    printf("}\n\n");
     return;
 }
