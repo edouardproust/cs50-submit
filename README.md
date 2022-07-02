@@ -3,6 +3,7 @@ Submited exercises and projects for the Harvard's CS50 certification.
 
 - View my certification (comin soon)
 - [Course homepage](https://pll.harvard.edu/course/cs50-introduction-computer-science)
+- [Submit page](https://submit.cs50.io/users/edouardproust) (require connexion)
 
 ## Technologies
 - Languages: 
