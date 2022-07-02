@@ -1,6 +1,8 @@
 # Harvard's CS50 (Computer science)
 Submited exercises and projects for the Harvard's CS50 certification.
 
+![image](https://user-images.githubusercontent.com/45925914/176991889-38df8479-6943-425d-a116-e9fa1bd4280b.png)
+
 - View my certification (comin soon)
 - [Course homepage](https://pll.harvard.edu/course/cs50-introduction-computer-science)
 - [Submit page](https://submit.cs50.io/users/edouardproust) (requires connexion)
