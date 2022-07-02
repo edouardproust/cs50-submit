@@ -1,0 +1,18 @@
+sort1 uses: bubble sort
+
+How do you know?:
+- Is the quickest to sort `sorted`: Omega(n)
+- Is the slowest to sort `random`: O(n²)
+
+sort2 uses: merge sort
+
+How do you know?:
+- Time to sort `sorted...`, `random...` and `reversed...` are close -> Theta(n log(n))
+- Is slower than `sort3` to resolve `...10000.txt` and `...50000.txt`: Theta(n²) > Theta(n log(n))
+
+sort3 uses: selection sort
+
+How do you know?:
+- Time to sort `sorted...`, `random...` and `reversed...` are close: Theta(n²)
+- Is quicker than `sort2` to resolve `...10000.txt` and `...50000.txt`: Theta(n log(n)) > Theta(n²)
+-> Theta(n²)
