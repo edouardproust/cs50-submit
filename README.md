@@ -5,7 +5,12 @@ Submited exercises and projects for the Harvard's CS50 certification.
 - [Course homepage](https://pll.harvard.edu/course/cs50-introduction-computer-science)
 
 ## Technologies
-- Languages: C, Python, Js, Html, Css
+- Languages: 
+  - C
+  - Python 
+  - Javascript
+  - HTML + CSS
+  - SQL
 - VsCode online workspace: https://code.cs50.io/
 
 ## Notions
