@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Transactions History
+{% endblock %}
+
+{% block main %}
+    <div class="mt-5">
+        {% if not transactions %}
+            <p>Your history is empty. Buy some stocks <a href="{{ url_for("buy") }}">here</a>.</p>
+        {% else %}
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Symbol</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Shares</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in transactions %}
+                        <tr>
+                            <th scope="row">{{ t.created_at }}</th>
+                            <td>
+                                {% if t.type == "B" %}
+                                    <span class="text-success">BUY</span>
+                                {% elif t.type == "S" %}
+                                    <span class="text-danger">SELL</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ t.symbol }}</td>
+                            <td>{{ t.name }}</td>
+                            <td>{{ t.price|usd }}</td>
+                            <td>{{ t.shares }}</td>
+                            <td>{{ t.total|usd }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

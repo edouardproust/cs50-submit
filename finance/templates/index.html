@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    My Portfolio
+{% endblock %}
+
+{% block main %}
+    <div class="mt-5">
+        <p class="lead my-5">
+            <span class="me-4">Shares value: <b>{{ total_value|usd }}</b></span>
+            <span class="me-4">Cash balance: <b>{{ cash_balance|usd }}</b></span>
+            <span>Total account: <b>{{ total_account|usd }}</b></span>
+        </p>
+        {% if not portfolio %}
+            <p>Your portfolio is empty. Buy some stocks <a href="{{ url_for("buy") }}">here</a>.</p>
+        {% else %}
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Symbol</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Shares</th>
+                        <th scope="col">Current price</th>
+                        <th scope="col">Total</th>
+                        <!--th scope="col">Avg. buying price</th-->
+                        <!--th scope="col">Profit & Loss</th-->
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in portfolio %}
+                        <tr>
+                            <th scope="row">{{ row.symbol }}</th>
+                            <td>{{ row.name }}</td>
+                            <td>{{ row.shares }}</td>
+                            <td>{{ row.price|usd }}</td>
+                            <td>{{ (row.price * row.shares)|usd }}</td>
+                            <td class="d-flex justify-content-center">
+                                <form action="{{ url_for('buy') }}" method="get" class="me-2">
+                                    <button type="submit" name="symbol" value="{{ row.symbol }}" class="btn btn-sm btn-success">Buy</button>
+                                </form>
+                                <form action="{{ url_for('sell') }}" method="get">
+                                    <button type="submit" name="symbol" value="{{ row.symbol }}" class="btn btn-sm btn-danger">Sell</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

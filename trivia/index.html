@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+        <!-- TODO: Add code to check answers to questions -->
+        <script defer src="app.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+                <!-- TODO: Add multiple choice question here -->
+                <div data-id="1" data-type="choice" data-correct="3">
+                    <h3>What’s the first thing a caterpillar usually eats after it’s born?</h3>
+                    <button value="1">Other bugs!</button>
+                    <button value="2">Grass</button>
+                    <button value="3">Its own eggshell</button>
+                    <button value="4">Cheerios</button>
+                    <div class="answer">Newborn caterpillars typically get their first meal from their own eggshells.</div>
+                </div>
+
+                <div data-id="2" data-type="choice" data-correct="1">
+                    <h3>Which of the following animals is not nocturnal?</h3>
+                    <button value="1">Sheep</button>
+                    <button value="2">Skunk</button>
+                    <button value="3">Leopard</button>
+                    <button value="4">Tiger</button>
+                    <div class="answer">Skunks, leopards, and tigers are most active after the sun goes down. Not sheeps, though - they're fast baa-sleep!</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+                <!-- TODO: Add free response question here -->
+                <div data-id="3" data-type="text" data-correct="45">
+                    <h3>About how many times do giant pandas poop each day?</h3>
+                    <input type="text">
+                    <button type="submit">Check Answer</button>
+                    <div class="answer">They poop <b>45</b> times per day. After eating anywhere from 26 to 84 pounds of bamboo each day, giant pandas need to get rid of the indigestible parts of the plant. That means pooping more than 45 times a day! All those droppings help biologists who study the animals in the wild. Scientists look for the poop to locate the solitary mammals, since they can be hard to find in the misty mountains of southwestern China where they live.</div>
+                </div>
+            </div>
+
+            <div class="section no-hover">
+                <p>Questions from <a href="https://kids.nationalgeographic.com/games/quizzes/article/quiz-whiz-animals" target="_blank">National Geographic</a></p>
+            <div class="section">
+        </div>
+    </body>
+</html>
